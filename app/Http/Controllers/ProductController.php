@@ -28,18 +28,23 @@ class ProductController extends Controller
     public function create(){
         return view('admin.pages.products.create');
     }
-    public function store($id){
-        dd( $request->all());
-        dd( $request->only('name','description'));
-        dd( $request->except('name','description'));
-        dd( $request->name);
-        dd( $request->has('name'));
-        dd( $request->input('name','value Default'));
+    public function store(Request $request){
+        $request->validate([
+            'name'=> 'required|min:3|max:255',
+            'description'=> 'nullable|min:3|max:255',
+            'filephoto'=>'required|image'
+        ]);
+        // dd( $request->all());
+        // dd( $request->only('name','description'));
+        // dd( $request->except('name','description'));
+        // dd( $request->name);
+        // dd( $request->has('name'));
+        // dd( $request->input('name','value Default'));
         if( $request->file('filephoto')->isValid()){
             // Default name
-            dd( $request->file('filephoto')->store('products'));
+            // dd( $request->file('filephoto')->store('products'));
             // Personal name
-            $nameFile = $request->name . '.' . $request->filephoto->extesion();
+            $nameFile = $request->name . '.' . $request->filephoto->extension();
             dd($request->file('filephoto')->storeAs('products',$nameFile));
         }
 
